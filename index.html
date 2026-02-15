@@ -34,8 +34,8 @@ h1 {
     font-size: 22px;
 }
 
+/* Slideshow */
 .slideshow {
-    position: relative;
     width: 220px;
     height: 220px;
     margin: 15px auto;
@@ -49,39 +49,53 @@ h1 {
     border: 5px solid #ff3366;
 }
 
+/* Slide controls */
 .controls button {
-    padding: 5px 12px;
-    border: none;
+    padding: 6px 12px;
     border-radius: 20px;
+    border: none;
     cursor: pointer;
     margin: 3px;
 }
 
+/* Buttons area */
 .buttons {
-    margin-top: 15px;
     position: relative;
-    height: 90px;
+    margin-top: 20px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
 }
 
 button {
     padding: 10px 22px;
-    border: none;
     border-radius: 25px;
+    border: none;
     font-size: 15px;
     cursor: pointer;
     transition: 0.3s;
 }
 
-#yesBtn { background: #ff3366; color: white; }
-#yesBtn:hover { background: #ff0033; transform: scale(1.1); }
+#yesBtn {
+    background: #ff3366;
+    color: white;
+    z-index: 2;
+}
+
+#yesBtn:hover {
+    background: #ff0033;
+    transform: scale(1.1);
+}
 
 #noBtn {
     background: grey;
     color: white;
     position: absolute;
-    left: 140px;
 }
 
+/* Love message */
 #loveMessage {
     display: none;
     margin-top: 15px;
@@ -89,13 +103,15 @@ button {
     color: #ff3366;
 }
 
+/* Music control */
 .music-control {
-    margin-top: 10px;
+    margin-top: 8px;
     font-size: 13px;
     cursor: pointer;
-    color: #555;
+    color: #666;
 }
 
+/* Floating hearts */
 .heart {
     position: absolute;
     bottom: -10px;
@@ -112,23 +128,27 @@ button {
 
 <body>
 
-<audio id="bgMusic" loop>
+<audio id="bgMusic" loop preload="auto">
     <source src="love.mp3" type="audio/mpeg">
 </audio>
 
 <div class="container">
-    <h1>Bhawana ❤️<br>My Cutu Baby<br>Will You Be My Valentine?</h1>
+    <h1>
+        Bhawana ❤️<br>
+        My Cutu Baby<br>
+        Will You Be My Valentine?
+    </h1>
 
     <div class="slideshow">
         <img id="slideImage" src="1.jpg">
     </div>
 
-    <div>
+    <div class="controls">
         <button onclick="prevSlide()">⟨</button>
         <button onclick="nextSlide()">⟩</button>
     </div>
 
-    <div class="buttons">
+    <div class="buttons" id="buttonArea">
         <button id="yesBtn">Yes ❤️</button>
         <button id="noBtn">No 😜</button>
     </div>
@@ -139,7 +159,7 @@ button {
     </div>
 
     <div class="music-control" onclick="toggleMusic()">
-        🎵 Tap here for Music On/Off
+        🎵 Tap here for Music On / Off
     </div>
 </div>
 
@@ -164,35 +184,43 @@ function prevSlide() {
 
 setInterval(nextSlide, 3000);
 
-/* No button escape */
-const noBtn = document.getElementById('noBtn');
-noBtn.addEventListener('mouseover', () => {
-    const x = Math.floor(Math.random() * 250) - 125;
-    const y = Math.floor(Math.random() * 250) - 125;
-    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+/* No Button Movement FIXED */
+const noBtn = document.getElementById("noBtn");
+const buttonArea = document.getElementById("buttonArea");
+
+noBtn.addEventListener("mouseover", function() {
+    const areaRect = buttonArea.getBoundingClientRect();
+    const maxX = areaRect.width - noBtn.offsetWidth;
+    const maxY = areaRect.height - noBtn.offsetHeight;
+
+    const randomX = Math.random() * maxX - areaRect.width/4;
+    const randomY = Math.random() * maxY - areaRect.height/4;
+
+    noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
 });
 
-/* Yes click */
-document.getElementById('yesBtn').addEventListener('click', () => {
-    document.getElementById('loveMessage').style.display = 'block';
-    playMusic();
+/* YES button */
+document.getElementById("yesBtn").addEventListener("click", function() {
+    document.getElementById("loveMessage").style.display = "block";
+    startMusic();
 });
 
 /* Music */
 const music = document.getElementById("bgMusic");
-music.volume = 0.5;
+music.volume = 0.6;
 
-function playMusic() {
-    music.play();
+function startMusic() {
+    music.play().catch(() => {});
 }
 
 function toggleMusic() {
-    if (music.paused) {
-        music.play();
-    } else {
-        music.pause();
-    }
+    if (music.paused) music.play();
+    else music.pause();
 }
+
+document.body.addEventListener("click", function() {
+    if (music.paused) music.play().catch(() => {});
+}, { once: true });
 
 /* Floating Hearts */
 function createHeart() {
@@ -202,17 +230,10 @@ function createHeart() {
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.fontSize = (Math.random() * 20 + 10) + "px";
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 6000);
 }
 
 setInterval(createHeart, 400);
-
-/* Auto start music on first interaction (mobile support) */
-document.body.addEventListener('click', () => {
-    if (music.paused) music.play();
-}, { once: true });
-
 </script>
 
 </body>
