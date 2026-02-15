@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Cutu Baby ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ff4e50, #fc913a);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    width: 350px;
+}
+
+h1 {
+    color: #ff3366;
+    font-size: 24px;
+}
+
+img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 15px 0;
+    border: 5px solid #ff3366;
+}
+
+.buttons {
+    margin-top: 20px;
+    position: relative;
+    height: 100px;
+}
+
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#yesBtn {
+    background: #ff3366;
+    color: white;
+}
+
+#yesBtn:hover {
+    background: #ff0033;
+    transform: scale(1.1);
+}
+
+#noBtn {
+    background: grey;
+    color: white;
+    position: absolute;
+    left: 150px;
+}
+
+#loveMessage {
+    display: none;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #ff3366;
+}
+
+/* Floating Hearts */
+.heart {
+    position: absolute;
+    bottom: -10px;
+    color: red;
+    font-size: 20px;
+    animation: floatUp 6s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-100vh) scale(1.5);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Bhawana, My Cutu Baby 💖<br>Will You Be My Valentine?</h1>
+
+    <img src="bhawana.jpg" alt="Bhawana">
+
+    <div class="buttons">
+        <button id="yesBtn">Yes ❤️</button>
+        <button id="noBtn">No 😜</button>
+    </div>
+
+    <div id="loveMessage">
+        You just made me the happiest person alive 💕<br><br>
+        Thank you for being my smile, my peace, my strength.<br>
+        I promise to love you more every single day, Cutu baby ❤️
+    </div>
+</div>
+
+<script>
+const noBtn = document.getElementById('noBtn');
+const yesBtn = document.getElementById('yesBtn');
+const loveMessage = document.getElementById('loveMessage');
+
+/* No button runs away */
+noBtn.addEventListener('mouseover', () => {
+    const x = Math.floor(Math.random() * 250) - 125;
+    const y = Math.floor(Math.random() * 250) - 125;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+/* Yes button shows love message */
+yesBtn.addEventListener('click', () => {
+    loveMessage.style.display = 'block';
+});
+
+/* Create floating hearts */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 6000);
+}
+
+setInterval(createHeart, 500);
+</script>
+
+</body>
+</html>
