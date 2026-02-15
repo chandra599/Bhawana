@@ -11,106 +11,122 @@ body {
     padding: 0;
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #ff4e50, #fc913a);
-    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
     overflow: hidden;
 }
 
 .container {
     background: white;
-    padding: 30px;
+    padding: 25px;
     border-radius: 20px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     text-align: center;
+    width: 360px;
     position: relative;
     z-index: 10;
-    width: 350px;
 }
 
 h1 {
     color: #ff3366;
-    font-size: 24px;
+    font-size: 22px;
 }
 
-img {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
+.slideshow {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: 15px auto;
+}
+
+.slideshow img {
+    width: 220px;
+    height: 220px;
     object-fit: cover;
-    margin: 15px 0;
+    border-radius: 50%;
     border: 5px solid #ff3366;
 }
 
+.controls button {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 3px;
+}
+
 .buttons {
-    margin-top: 20px;
+    margin-top: 15px;
     position: relative;
-    height: 100px;
+    height: 90px;
 }
 
 button {
-    padding: 12px 25px;
+    padding: 10px 22px;
     border: none;
-    border-radius: 30px;
-    font-size: 16px;
+    border-radius: 25px;
+    font-size: 15px;
     cursor: pointer;
     transition: 0.3s;
 }
 
-#yesBtn {
-    background: #ff3366;
-    color: white;
-}
-
-#yesBtn:hover {
-    background: #ff0033;
-    transform: scale(1.1);
-}
+#yesBtn { background: #ff3366; color: white; }
+#yesBtn:hover { background: #ff0033; transform: scale(1.1); }
 
 #noBtn {
     background: grey;
     color: white;
     position: absolute;
-    left: 150px;
+    left: 140px;
 }
 
 #loveMessage {
     display: none;
-    margin-top: 20px;
-    font-size: 18px;
+    margin-top: 15px;
+    font-size: 17px;
     color: #ff3366;
 }
 
-/* Floating Hearts */
+.music-control {
+    margin-top: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #555;
+}
+
 .heart {
     position: absolute;
     bottom: -10px;
     color: red;
-    font-size: 20px;
     animation: floatUp 6s linear infinite;
-    opacity: 0.7;
 }
 
 @keyframes floatUp {
-    0% {
-        transform: translateY(0) scale(1);
-        opacity: 0.8;
-    }
-    100% {
-        transform: translateY(-100vh) scale(1.5);
-        opacity: 0;
-    }
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100vh); opacity: 0; }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-    <h1>Bhawana, My Cutu Baby 💖<br>Will You Be My Valentine?</h1>
+<audio id="bgMusic" loop>
+    <source src="love.mp3" type="audio/mpeg">
+</audio>
 
-    <img src="bhawana.jpg" alt="Bhawana">
+<div class="container">
+    <h1>Bhawana ❤️<br>My Cutu Baby<br>Will You Be My Valentine?</h1>
+
+    <div class="slideshow">
+        <img id="slideImage" src="1.jpg">
+    </div>
+
+    <div>
+        <button onclick="prevSlide()">⟨</button>
+        <button onclick="nextSlide()">⟩</button>
+    </div>
 
     <div class="buttons">
         <button id="yesBtn">Yes ❤️</button>
@@ -119,29 +135,66 @@ button {
 
     <div id="loveMessage">
         You just made me the happiest person alive 💕<br><br>
-        Thank you for being my smile, my peace, my strength.<br>
-        I promise to love you more every single day, Cutu baby ❤️
+        I promise to love you more every day, Cutu baby ❤️
+    </div>
+
+    <div class="music-control" onclick="toggleMusic()">
+        🎵 Tap here for Music On/Off
     </div>
 </div>
 
 <script>
-const noBtn = document.getElementById('noBtn');
-const yesBtn = document.getElementById('yesBtn');
-const loveMessage = document.getElementById('loveMessage');
+/* Slideshow */
+const images = ["1.jpg", "2.jpg", "3.jpg", "4.jpg"];
+let currentIndex = 0;
 
-/* No button runs away */
+function showSlide(index) {
+    document.getElementById("slideImage").src = images[index];
+}
+
+function nextSlide() {
+    currentIndex = (currentIndex + 1) % images.length;
+    showSlide(currentIndex);
+}
+
+function prevSlide() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    showSlide(currentIndex);
+}
+
+setInterval(nextSlide, 3000);
+
+/* No button escape */
+const noBtn = document.getElementById('noBtn');
 noBtn.addEventListener('mouseover', () => {
     const x = Math.floor(Math.random() * 250) - 125;
     const y = Math.floor(Math.random() * 250) - 125;
     noBtn.style.transform = `translate(${x}px, ${y}px)`;
 });
 
-/* Yes button shows love message */
-yesBtn.addEventListener('click', () => {
-    loveMessage.style.display = 'block';
+/* Yes click */
+document.getElementById('yesBtn').addEventListener('click', () => {
+    document.getElementById('loveMessage').style.display = 'block';
+    playMusic();
 });
 
-/* Create floating hearts */
+/* Music */
+const music = document.getElementById("bgMusic");
+music.volume = 0.5;
+
+function playMusic() {
+    music.play();
+}
+
+function toggleMusic() {
+    if (music.paused) {
+        music.play();
+    } else {
+        music.pause();
+    }
+}
+
+/* Floating Hearts */
 function createHeart() {
     const heart = document.createElement("div");
     heart.classList.add("heart");
@@ -150,12 +203,16 @@ function createHeart() {
     heart.style.fontSize = (Math.random() * 20 + 10) + "px";
     document.body.appendChild(heart);
 
-    setTimeout(() => {
-        heart.remove();
-    }, 6000);
+    setTimeout(() => heart.remove(), 6000);
 }
 
-setInterval(createHeart, 500);
+setInterval(createHeart, 400);
+
+/* Auto start music on first interaction (mobile support) */
+document.body.addEventListener('click', () => {
+    if (music.paused) music.play();
+}, { once: true });
+
 </script>
 
 </body>
