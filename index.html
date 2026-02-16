@@ -1,242 +1,236 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For My Cutu Baby ❤️</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #ff4e50, #fc913a);
-    overflow: hidden;
+body{
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#ff4e50,#fc913a);
+    overflow:hidden;
 }
 
 /* Pages */
-.page {
-    position: absolute;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.8s ease;
+.page{
+    position:absolute;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    transition:opacity .7s;
 }
 
-#page2 {
-    background: linear-gradient(135deg, #ff9a9e, #fecfef);
-    flex-direction: column;
-    text-align: center;
-    opacity: 0;
+#page2{
+    background:linear-gradient(135deg,#ff9a9e,#fecfef);
+    flex-direction:column;
+    text-align:center;
+    opacity:0;
 }
 
-/* Main Box */
-.container {
-    background: white;
-    padding: 25px;
-    border-radius: 20px;
-    width: 360px;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+/* Box */
+.box{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    width:340px;
+    text-align:center;
 }
 
-h1 { color: #ff3366; }
+h2{color:#ff3366;}
 
-.slideshow img {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 5px solid #ff3366;
+img{
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #ff3366;
 }
 
-/* Buttons */
-.buttons {
-    margin-top: 20px;
-    position: relative;
-    height: 150px;
+/* Buttons area */
+.btn-area{
+    position:relative;
+    height:140px;
+    margin-top:15px;
 }
 
-button {
-    padding: 10px 25px;
-    border: none;
-    border-radius: 25px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
-    position: absolute;
+button{
+    padding:10px 22px;
+    border:none;
+    border-radius:25px;
+    font-size:16px;
+    cursor:pointer;
+    position:absolute;
 }
 
-#yesBtn {
-    background: #ff3366;
-    color: white;
-    left: 40px;
-    top: 60px;
+#yes{
+    background:#ff3366;
+    color:white;
+    left:40px;
+    top:60px;
+    transition:.3s;
 }
 
-#noBtn {
-    background: grey;
-    color: white;
-    left: 200px;
-    top: 60px;
-}
-
-/* Letter */
-.letter {
-    font-size: 22px;
-    max-width: 700px;
-    padding: 40px;
-    color: white;
+#no{
+    background:gray;
+    color:white;
+    left:180px;
+    top:60px;
 }
 
 /* Confetti */
-.confetti {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    top: -10px;
-    animation: fall linear forwards;
+.confetti{
+    position:fixed;
+    width:8px;
+    height:8px;
+    top:-10px;
+    animation:fall linear forwards;
+}
+@keyframes fall{
+    to{
+        transform:translateY(100vh) rotate(720deg);
+        opacity:0;
+    }
 }
 
-@keyframes fall {
-    to {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-    }
+/* Love letter */
+.letter{
+    font-size:22px;
+    color:white;
+    padding:30px;
+    max-width:600px;
 }
 </style>
 </head>
 
 <body>
 
-<audio id="bgMusic" loop preload="auto">
-    <source src="love.mp3" type="audio/mpeg">
+<audio id="music" loop>
+  <source src="love.mp3" type="audio/mpeg">
 </audio>
 
 <!-- PAGE 1 -->
 <div class="page" id="page1">
-    <div class="container">
-        <h1>Bhawana ❤️<br>My Cutu Baby<br>Will You Be My Valentine?</h1>
-        <div class="slideshow">
-            <img id="slideImage" src="1.jpg">
-        </div>
+  <div class="box">
+    <h2>Bhawana ❤️<br>My Cutu Baby<br>Will You Be My Valentine?</h2>
+    <img id="photo" src="1.jpg">
 
-        <div class="buttons">
-            <button id="yesBtn">Yes ❤️</button>
-            <button id="noBtn">No 😜</button>
-        </div>
+    <div class="btn-area">
+      <button id="yes">Yes ❤️</button>
+      <button id="no">No 😜</button>
     </div>
+  </div>
 </div>
 
 <!-- PAGE 2 -->
 <div class="page" id="page2">
-    <div class="letter" id="loveLetter"></div>
+  <div class="letter" id="letter"></div>
 </div>
 
 <script>
-/* Slideshow */
-const images = ["1.jpg","2.jpg","3.jpg","4.jpg"];
-let slideIndex = 0;
-setInterval(() => {
-    slideIndex = (slideIndex + 1) % images.length;
-    document.getElementById("slideImage").src = images[slideIndex];
-}, 3000);
 
-/* Music fix */
-const music = document.getElementById("bgMusic");
-music.volume = 0.6;
+/* ---------------- SLIDESHOW ---------------- */
+const pics=["1.jpg","2.jpg","3.jpg","4.jpg"];
+let i=0;
+setInterval(()=>{
+   i=(i+1)%pics.length;
+   document.getElementById("photo").src=pics[i];
+},3000);
 
-function playMusic() {
-    music.play().catch(() => {});
-}
+/* ---------------- MUSIC FIX ---------------- */
+const music=document.getElementById("music");
+music.volume=0.6;
 
-/* Guarantee music on first click anywhere */
-document.addEventListener("click", function enableMusic() {
-    playMusic();
-    document.removeEventListener("click", enableMusic);
+/* music will play on FIRST tap anywhere */
+document.addEventListener("click",function start(){
+   music.play().catch(()=>{});
+   document.removeEventListener("click",start);
 });
 
-/* Yes Button Growth */
-let scale = 1;
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
+/* ---------------- NO BUTTON WORK FIX ---------------- */
+const noBtn=document.getElementById("no");
+const yesBtn=document.getElementById("yes");
 
-function moveNoButton() {
+let scale=1;
 
-    const maxX = 250;
-    const maxY = 80;
+function moveNo(){
+   const x=Math.random()*220;
+   const y=Math.random()*90;
 
-    const randomX = Math.random() * maxX;
-    const randomY = Math.random() * maxY;
+   noBtn.style.left=x+"px";
+   noBtn.style.top=y+"px";
 
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
-
-    scale += 0.1;
-    yesBtn.style.transform = `scale(${scale})`;
+   scale+=0.1;
+   yesBtn.style.transform="scale("+scale+")";
 }
 
-noBtn.addEventListener("mouseover", moveNoButton);
-noBtn.addEventListener("click", moveNoButton); // works on mobile too
+/* works on desktop + mobile */
+noBtn.addEventListener("mouseenter",moveNo);
+noBtn.addEventListener("click",moveNo);
+noBtn.addEventListener("touchstart",moveNo);
 
-/* Confetti */
-function createConfetti() {
-    for(let i=0;i<120;i++){
-        const confetti = document.createElement("div");
-        confetti.classList.add("confetti");
-        confetti.style.left = Math.random()*100+"vw";
-        confetti.style.background = "hsl("+Math.random()*360+",100%,50%)";
-        confetti.style.animationDuration = (Math.random()*3+2)+"s";
-        document.body.appendChild(confetti);
-        setTimeout(()=>confetti.remove(),4000);
-    }
+/* ---------------- CONFETTI ---------------- */
+function confetti(){
+   for(let c=0;c<120;c++){
+      const div=document.createElement("div");
+      div.className="confetti";
+      div.style.left=Math.random()*100+"vw";
+      div.style.background="hsl("+Math.random()*360+",100%,50%)";
+      div.style.animationDuration=(Math.random()*2+2)+"s";
+      document.body.appendChild(div);
+      setTimeout(()=>div.remove(),4000);
+   }
 }
 
-/* YES click transition */
-yesBtn.addEventListener("click", () => {
+/* ---------------- YES CLICK ---------------- */
+yesBtn.onclick=function(){
 
-    createConfetti();
-    playMusic();
+   music.play().catch(()=>{});
+   confetti();
 
-    setTimeout(()=>{
-        document.getElementById("page1").style.opacity = 0;
-        document.getElementById("page2").style.opacity = 1;
-        typeLetter();
-    },800);
-});
+   setTimeout(()=>{
+      document.getElementById("page1").style.opacity=0;
+      document.getElementById("page2").style.opacity=1;
+      typeLetter();
+   },700);
+};
 
-/* Typing Letter */
-const message = `
+/* ---------------- TYPING LETTER ---------------- */
+const text=`
 My Dearest Bhawana ❤️
 
-From the moment we started talking,
-you became my peace, my happiness,
+You are my peace,
+my happiness,
 my beautiful Cutu baby.
 
-You stood by me in my worst times,
-and I promise to stand by you forever.
+Through every bad time,
+you stood with me.
 
-Today and always,
-I choose you.
+I promise to choose you,
+today,
+tomorrow,
+and forever.
 
 I love you ❤️
 `;
 
 function typeLetter(){
-    let i=0;
-    const speed=35;
-    const target=document.getElementById("loveLetter");
+   let j=0;
+   const speed=35;
+   const target=document.getElementById("letter");
 
-    function typing(){
-        if(i<message.length){
-            target.innerHTML += message[i]==="\n" ? "<br>" : message[i];
-            i++;
-            setTimeout(typing,speed);
-        }
-    }
-    typing();
+   function type(){
+      if(j<text.length){
+         target.innerHTML+= text[j]==="\n"?"<br>":text[j];
+         j++;
+         setTimeout(type,speed);
+      }
+   }
+   type();
 }
+
 </script>
 
 </body>
