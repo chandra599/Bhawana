@@ -8,7 +8,8 @@
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #ff4e50, #fc913a);
     overflow: hidden;
 }
@@ -21,68 +22,69 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: opacity 0.8s ease;
+    transition: opacity 1s ease;
 }
 
+#page1 { z-index: 2; }
 #page2 {
     background: linear-gradient(135deg, #ff9a9e, #fecfef);
     flex-direction: column;
     text-align: center;
     opacity: 0;
+    z-index: 1;
 }
 
-/* Main Box */
+/* Container */
 .container {
     background: white;
     padding: 25px;
     border-radius: 20px;
-    width: 360px;
     text-align: center;
+    width: 360px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.2);
 }
 
-h1 { color: #ff3366; }
+h1 {
+    color: #ff3366;
+    font-size: 22px;
+}
 
 .slideshow img {
     width: 220px;
     height: 220px;
-    border-radius: 50%;
     object-fit: cover;
+    border-radius: 50%;
     border: 5px solid #ff3366;
 }
 
 /* Buttons */
 .buttons {
-    margin-top: 20px;
     position: relative;
-    height: 150px;
+    margin-top: 20px;
+    height: 120px;
 }
 
 button {
-    padding: 10px 25px;
-    border: none;
+    padding: 10px 22px;
     border-radius: 25px;
+    border: none;
     font-size: 16px;
     cursor: pointer;
     transition: 0.3s;
-    position: absolute;
 }
 
 #yesBtn {
     background: #ff3366;
     color: white;
-    left: 40px;
-    top: 60px;
 }
 
 #noBtn {
     background: grey;
     color: white;
-    left: 200px;
-    top: 60px;
+    position: absolute;
 }
 
-/* Letter */
+/* Love letter full screen */
 .letter {
     font-size: 22px;
     max-width: 700px;
@@ -90,13 +92,26 @@ button {
     color: white;
 }
 
+.heart {
+    position: absolute;
+    bottom: -10px;
+    color: red;
+    animation: floatUp 6s linear infinite;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100vh); opacity: 0; }
+}
+
 /* Confetti */
 .confetti {
     position: fixed;
     width: 8px;
     height: 8px;
-    top: -10px;
-    animation: fall linear forwards;
+    background: red;
+    top: 0;
+    animation: fall 3s linear forwards;
 }
 
 @keyframes fall {
@@ -110,7 +125,7 @@ button {
 
 <body>
 
-<audio id="bgMusic" loop preload="auto">
+<audio id="bgMusic" loop>
     <source src="love.mp3" type="audio/mpeg">
 </audio>
 
@@ -118,11 +133,12 @@ button {
 <div class="page" id="page1">
     <div class="container">
         <h1>Bhawana ❤️<br>My Cutu Baby<br>Will You Be My Valentine?</h1>
+
         <div class="slideshow">
             <img id="slideImage" src="1.jpg">
         </div>
 
-        <div class="buttons">
+        <div class="buttons" id="buttonArea">
             <button id="yesBtn">Yes ❤️</button>
             <button id="noBtn">No 😜</button>
         </div>
@@ -136,107 +152,96 @@ button {
 
 <script>
 /* Slideshow */
-const images = ["1.jpg","2.jpg","3.jpg","4.jpg"];
-let slideIndex = 0;
+const images = ["1.jpg", "2.jpg", "3.jpg", "4.jpg"];
+let index = 0;
 setInterval(() => {
-    slideIndex = (slideIndex + 1) % images.length;
-    document.getElementById("slideImage").src = images[slideIndex];
+    index = (index + 1) % images.length;
+    document.getElementById("slideImage").src = images[index];
 }, 3000);
 
-/* Music fix */
-const music = document.getElementById("bgMusic");
-music.volume = 0.6;
-
-function playMusic() {
-    music.play().catch(() => {});
-}
-
-/* Guarantee music on first click anywhere */
-document.addEventListener("click", function enableMusic() {
-    playMusic();
-    document.removeEventListener("click", enableMusic);
-});
-
-/* Yes Button Growth */
-let scale = 1;
+/* Yes growing logic */
+let yesScale = 1;
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 
-function moveNoButton() {
+noBtn.addEventListener("mouseover", () => {
+    const randomX = Math.random() * 250 - 125;
+    const randomY = Math.random() * 120 - 60;
+    noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
 
-    const maxX = 250;
-    const maxY = 80;
+    yesScale += 0.1;
+    yesBtn.style.transform = `scale(${yesScale})`;
+});
 
-    const randomX = Math.random() * maxX;
-    const randomY = Math.random() * maxY;
-
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
-
-    scale += 0.1;
-    yesBtn.style.transform = `scale(${scale})`;
-}
-
-noBtn.addEventListener("mouseover", moveNoButton);
-noBtn.addEventListener("click", moveNoButton); // works on mobile too
-
-/* Confetti */
+/* Confetti explosion */
 function createConfetti() {
-    for(let i=0;i<120;i++){
+    for (let i = 0; i < 150; i++) {
         const confetti = document.createElement("div");
         confetti.classList.add("confetti");
-        confetti.style.left = Math.random()*100+"vw";
-        confetti.style.background = "hsl("+Math.random()*360+",100%,50%)";
-        confetti.style.animationDuration = (Math.random()*3+2)+"s";
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.background = 
+            "hsl(" + Math.random() * 360 + ",100%,50%)";
+        confetti.style.animationDuration = Math.random() * 3 + 2 + "s";
         document.body.appendChild(confetti);
-        setTimeout(()=>confetti.remove(),4000);
+        setTimeout(() => confetti.remove(), 4000);
     }
 }
 
-/* YES click transition */
+/* Transition + Letter */
 yesBtn.addEventListener("click", () => {
-
     createConfetti();
-    playMusic();
+    document.getElementById("bgMusic").play();
 
-    setTimeout(()=>{
+    setTimeout(() => {
         document.getElementById("page1").style.opacity = 0;
         document.getElementById("page2").style.opacity = 1;
+
         typeLetter();
-    },800);
+    }, 1000);
 });
 
-/* Typing Letter */
+/* Typing effect */
 const message = `
 My Dearest Bhawana ❤️
 
 From the moment we started talking,
 you became my peace, my happiness,
-my beautiful Cutu baby.
+my Cutu baby.
 
-You stood by me in my worst times,
-and I promise to stand by you forever.
+You stood with me in my bad times,
+and I promise to stand with you forever.
 
-Today and always,
+Today, tomorrow, and always —
 I choose you.
 
-I love you ❤️
+Will you continue being mine forever? ❤️
 `;
 
-function typeLetter(){
-    let i=0;
-    const speed=35;
-    const target=document.getElementById("loveLetter");
+function typeLetter() {
+    let i = 0;
+    const speed = 40;
+    const letterDiv = document.getElementById("loveLetter");
 
-    function typing(){
-        if(i<message.length){
-            target.innerHTML += message[i]==="\n" ? "<br>" : message[i];
+    function typing() {
+        if (i < message.length) {
+            letterDiv.innerHTML += message.charAt(i) === "\n" ? "<br>" : message.charAt(i);
             i++;
-            setTimeout(typing,speed);
+            setTimeout(typing, speed);
         }
     }
     typing();
 }
+
+/* Floating hearts */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+}
+setInterval(createHeart, 500);
 </script>
 
 </body>
