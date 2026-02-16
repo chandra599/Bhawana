@@ -11,34 +11,42 @@ body {
     padding: 0;
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #ff4e50, #fc913a);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     overflow: hidden;
 }
 
+/* Pages */
+.page {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1s ease;
+}
+
+#page1 { z-index: 2; }
+#page2 {
+    background: linear-gradient(135deg, #ff9a9e, #fecfef);
+    flex-direction: column;
+    text-align: center;
+    opacity: 0;
+    z-index: 1;
+}
+
+/* Container */
 .container {
     background: white;
     padding: 25px;
     border-radius: 20px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     text-align: center;
     width: 360px;
-    position: relative;
-    z-index: 10;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
 }
 
 h1 {
     color: #ff3366;
     font-size: 22px;
-}
-
-/* Slideshow */
-.slideshow {
-    width: 220px;
-    height: 220px;
-    margin: 15px auto;
 }
 
 .slideshow img {
@@ -49,31 +57,18 @@ h1 {
     border: 5px solid #ff3366;
 }
 
-/* Slide controls */
-.controls button {
-    padding: 6px 12px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
-    margin: 3px;
-}
-
-/* Buttons area */
+/* Buttons */
 .buttons {
     position: relative;
     margin-top: 20px;
     height: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
 }
 
 button {
     padding: 10px 22px;
     border-radius: 25px;
     border: none;
-    font-size: 15px;
+    font-size: 16px;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -81,12 +76,6 @@ button {
 #yesBtn {
     background: #ff3366;
     color: white;
-    z-index: 2;
-}
-
-#yesBtn:hover {
-    background: #ff0033;
-    transform: scale(1.1);
 }
 
 #noBtn {
@@ -95,23 +84,14 @@ button {
     position: absolute;
 }
 
-/* Love message */
-#loveMessage {
-    display: none;
-    margin-top: 15px;
-    font-size: 17px;
-    color: #ff3366;
+/* Love letter full screen */
+.letter {
+    font-size: 22px;
+    max-width: 700px;
+    padding: 40px;
+    color: white;
 }
 
-/* Music control */
-.music-control {
-    margin-top: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    color: #666;
-}
-
-/* Floating hearts */
 .heart {
     position: absolute;
     bottom: -10px;
@@ -123,117 +103,145 @@ button {
     0% { transform: translateY(0); opacity: 1; }
     100% { transform: translateY(-100vh); opacity: 0; }
 }
+
+/* Confetti */
+.confetti {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: red;
+    top: 0;
+    animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<audio id="bgMusic" loop preload="auto">
+<audio id="bgMusic" loop>
     <source src="love.mp3" type="audio/mpeg">
 </audio>
 
-<div class="container">
-    <h1>
-        Bhawana ❤️<br>
-        My Cutu Baby<br>
-        Will You Be My Valentine?
-    </h1>
+<!-- PAGE 1 -->
+<div class="page" id="page1">
+    <div class="container">
+        <h1>Bhawana ❤️<br>My Cutu Baby<br>Will You Be My Valentine?</h1>
 
-    <div class="slideshow">
-        <img id="slideImage" src="1.jpg">
-    </div>
+        <div class="slideshow">
+            <img id="slideImage" src="1.jpg">
+        </div>
 
-    <div class="controls">
-        <button onclick="prevSlide()">⟨</button>
-        <button onclick="nextSlide()">⟩</button>
+        <div class="buttons" id="buttonArea">
+            <button id="yesBtn">Yes ❤️</button>
+            <button id="noBtn">No 😜</button>
+        </div>
     </div>
+</div>
 
-    <div class="buttons" id="buttonArea">
-        <button id="yesBtn">Yes ❤️</button>
-        <button id="noBtn">No 😜</button>
-    </div>
-
-    <div id="loveMessage">
-        You just made me the happiest person alive 💕<br><br>
-        I promise to love you more every day, Cutu baby ❤️
-    </div>
-
-    <div class="music-control" onclick="toggleMusic()">
-        🎵 Tap here for Music On / Off
-    </div>
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+    <div class="letter" id="loveLetter"></div>
 </div>
 
 <script>
 /* Slideshow */
 const images = ["1.jpg", "2.jpg", "3.jpg", "4.jpg"];
-let currentIndex = 0;
-
-function showSlide(index) {
+let index = 0;
+setInterval(() => {
+    index = (index + 1) % images.length;
     document.getElementById("slideImage").src = images[index];
-}
+}, 3000);
 
-function nextSlide() {
-    currentIndex = (currentIndex + 1) % images.length;
-    showSlide(currentIndex);
-}
-
-function prevSlide() {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    showSlide(currentIndex);
-}
-
-setInterval(nextSlide, 3000);
-
-/* No Button Movement FIXED */
+/* Yes growing logic */
+let yesScale = 1;
+const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
-const buttonArea = document.getElementById("buttonArea");
 
-noBtn.addEventListener("mouseover", function() {
-    const areaRect = buttonArea.getBoundingClientRect();
-    const maxX = areaRect.width - noBtn.offsetWidth;
-    const maxY = areaRect.height - noBtn.offsetHeight;
-
-    const randomX = Math.random() * maxX - areaRect.width/4;
-    const randomY = Math.random() * maxY - areaRect.height/4;
-
+noBtn.addEventListener("mouseover", () => {
+    const randomX = Math.random() * 250 - 125;
+    const randomY = Math.random() * 120 - 60;
     noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+
+    yesScale += 0.1;
+    yesBtn.style.transform = `scale(${yesScale})`;
 });
 
-/* YES button */
-document.getElementById("yesBtn").addEventListener("click", function() {
-    document.getElementById("loveMessage").style.display = "block";
-    startMusic();
+/* Confetti explosion */
+function createConfetti() {
+    for (let i = 0; i < 150; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.background = 
+            "hsl(" + Math.random() * 360 + ",100%,50%)";
+        confetti.style.animationDuration = Math.random() * 3 + 2 + "s";
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 4000);
+    }
+}
+
+/* Transition + Letter */
+yesBtn.addEventListener("click", () => {
+    createConfetti();
+    document.getElementById("bgMusic").play();
+
+    setTimeout(() => {
+        document.getElementById("page1").style.opacity = 0;
+        document.getElementById("page2").style.opacity = 1;
+
+        typeLetter();
+    }, 1000);
 });
 
-/* Music */
-const music = document.getElementById("bgMusic");
-music.volume = 0.6;
+/* Typing effect */
+const message = `
+My Dearest Bhawana ❤️
 
-function startMusic() {
-    music.play().catch(() => {});
+From the moment we started talking,
+you became my peace, my happiness,
+my Cutu baby.
+
+You stood with me in my bad times,
+and I promise to stand with you forever.
+
+Today, tomorrow, and always —
+I choose you.
+
+Will you continue being mine forever? ❤️
+`;
+
+function typeLetter() {
+    let i = 0;
+    const speed = 40;
+    const letterDiv = document.getElementById("loveLetter");
+
+    function typing() {
+        if (i < message.length) {
+            letterDiv.innerHTML += message.charAt(i) === "\n" ? "<br>" : message.charAt(i);
+            i++;
+            setTimeout(typing, speed);
+        }
+    }
+    typing();
 }
 
-function toggleMusic() {
-    if (music.paused) music.play();
-    else music.pause();
-}
-
-document.body.addEventListener("click", function() {
-    if (music.paused) music.play().catch(() => {});
-}, { once: true });
-
-/* Floating Hearts */
+/* Floating hearts */
 function createHeart() {
     const heart = document.createElement("div");
     heart.classList.add("heart");
     heart.innerHTML = "❤️";
     heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = (Math.random() * 20 + 10) + "px";
     document.body.appendChild(heart);
     setTimeout(() => heart.remove(), 6000);
 }
-
-setInterval(createHeart, 400);
+setInterval(createHeart, 500);
 </script>
 
 </body>
