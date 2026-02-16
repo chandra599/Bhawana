@@ -6,111 +6,109 @@
 
 <style>
 body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:linear-gradient(135deg,#ff4e50,#fc913a);
-  overflow:hidden;
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#ff4e50,#fc913a);
+    overflow:hidden;
 }
 
 /* Pages */
 .page{
-  position:absolute;
-  width:100%;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  transition:opacity .6s ease;
+    position:absolute;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    transition:opacity .7s;
 }
 
 #page2{
-  background:linear-gradient(135deg,#ff9a9e,#fecfef);
-  flex-direction:column;
-  text-align:center;
-  opacity:0;
+    background:linear-gradient(135deg,#ff9a9e,#fecfef);
+    flex-direction:column;
+    text-align:center;
+    opacity:0;
 }
 
-/* Main Box */
+/* Box */
 .box{
-  background:white;
-  padding:25px;
-  border-radius:20px;
-  width:330px;
-  text-align:center;
-  box-shadow:0 15px 40px rgba(0,0,0,.2);
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    width:340px;
+    text-align:center;
 }
 
 h2{color:#ff3366;}
 
 img{
-  width:200px;
-  height:200px;
-  border-radius:50%;
-  object-fit:cover;
-  border:4px solid #ff3366;
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #ff3366;
 }
 
-/* Buttons */
+/* Buttons area */
 .btn-area{
-  position:relative;
-  height:140px;
-  margin-top:15px;
+    position:relative;
+    height:140px;
+    margin-top:15px;
 }
 
 button{
-  padding:10px 25px;
-  border:none;
-  border-radius:25px;
-  font-size:16px;
-  cursor:pointer;
-  position:absolute;
-  transition:.3s;
+    padding:10px 22px;
+    border:none;
+    border-radius:25px;
+    font-size:16px;
+    cursor:pointer;
+    position:absolute;
 }
 
 #yes{
-  background:#ff3366;
-  color:white;
-  left:40px;
-  top:60px;
+    background:#ff3366;
+    color:white;
+    left:40px;
+    top:60px;
+    transition:.3s;
 }
 
 #no{
-  background:gray;
-  color:white;
-  left:170px;
-  top:60px;
+    background:gray;
+    color:white;
+    left:180px;
+    top:60px;
 }
 
 /* Confetti */
 .confetti{
-  position:fixed;
-  width:8px;
-  height:8px;
-  top:-10px;
-  animation:fall linear forwards;
+    position:fixed;
+    width:8px;
+    height:8px;
+    top:-10px;
+    animation:fall linear forwards;
 }
-
 @keyframes fall{
-  to{
-    transform:translateY(100vh) rotate(720deg);
-    opacity:0;
-  }
+    to{
+        transform:translateY(100vh) rotate(720deg);
+        opacity:0;
+    }
 }
 
-/* Love Letter */
+/* Love letter */
 .letter{
-  font-size:22px;
-  color:white;
-  padding:30px;
-  max-width:600px;
+    font-size:22px;
+    color:white;
+    padding:30px;
+    max-width:600px;
 }
 </style>
 </head>
 
 <body>
 
-<audio id="music">
-  <source src="Meri Aashiqui Aashiqui 2 128 Kbps.mp3" type="audio/mpeg">
+<audio id="music" loop>
+  <source src="love.mp3" type="audio/mpeg">
 </audio>
 
 <!-- PAGE 1 -->
@@ -135,92 +133,102 @@ button{
 
 /* ---------------- SLIDESHOW ---------------- */
 const pics=["1.jpg","2.jpg","3.jpg","4.jpg"];
-let index=0;
-
+let i=0;
 setInterval(()=>{
-  index=(index+1)%pics.length;
-  document.getElementById("photo").src=pics[index];
+   i=(i+1)%pics.length;
+   document.getElementById("photo").src=pics[i];
 },3000);
 
-/* ---------------- NO BUTTON (PERMANENT FIX) ---------------- */
+/* ---------------- MUSIC FIX ---------------- */
+const music=document.getElementById("music");
+music.volume=0.6;
+
+/* music will play on FIRST tap anywhere */
+document.addEventListener("click",function start(){
+   music.play().catch(()=>{});
+   document.removeEventListener("click",start);
+});
+
+/* ---------------- NO BUTTON WORK FIX ---------------- */
 const noBtn=document.getElementById("no");
 const yesBtn=document.getElementById("yes");
+
 let scale=1;
 
 function moveNo(){
-  const x=Math.random()*200;
-  const y=Math.random()*90;
+   const x=Math.random()*220;
+   const y=Math.random()*90;
 
-  noBtn.style.left=x+"px";
-  noBtn.style.top=y+"px";
+   noBtn.style.left=x+"px";
+   noBtn.style.top=y+"px";
 
-  scale+=0.1;
-  yesBtn.style.transform="scale("+scale+")";
+   scale+=0.1;
+   yesBtn.style.transform="scale("+scale+")";
 }
 
+/* works on desktop + mobile */
 noBtn.addEventListener("mouseenter",moveNo);
 noBtn.addEventListener("click",moveNo);
 noBtn.addEventListener("touchstart",moveNo);
 
 /* ---------------- CONFETTI ---------------- */
-function launchConfetti(){
-  for(let i=0;i<120;i++){
-    const c=document.createElement("div");
-    c.className="confetti";
-    c.style.left=Math.random()*100+"vw";
-    c.style.background="hsl("+Math.random()*360+",100%,50%)";
-    c.style.animationDuration=(Math.random()*2+2)+"s";
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),4000);
-  }
+function confetti(){
+   for(let c=0;c<120;c++){
+      const div=document.createElement("div");
+      div.className="confetti";
+      div.style.left=Math.random()*100+"vw";
+      div.style.background="hsl("+Math.random()*360+",100%,50%)";
+      div.style.animationDuration=(Math.random()*2+2)+"s";
+      document.body.appendChild(div);
+      setTimeout(()=>div.remove(),4000);
+   }
 }
 
 /* ---------------- YES CLICK ---------------- */
 yesBtn.onclick=function(){
 
-  /* MUSIC PLAYS ONLY HERE - guaranteed */
-  const music=document.getElementById("music");
-  music.volume=0.6;
-  music.play().catch(()=>{});
+   music.play().catch(()=>{});
+   confetti();
 
-  launchConfetti();
-
-  setTimeout(()=>{
-    document.getElementById("page1").style.opacity=0;
-    document.getElementById("page2").style.opacity=1;
-    typeLetter();
-  },700);
+   setTimeout(()=>{
+      document.getElementById("page1").style.opacity=0;
+      document.getElementById("page2").style.opacity=1;
+      typeLetter();
+   },700);
 };
 
-/* ---------------- LOVE LETTER ---------------- */
-const message=`
+/* ---------------- TYPING LETTER ---------------- */
+const text=`
 My Dearest Bhawana ❤️
 
 You are my peace,
 my happiness,
 my beautiful Cutu baby.
 
-Through every difficult time,
+Through every bad time,
 you stood with me.
 
-And I promise,
-I will stand with you forever.
+I promise to choose you,
+today,
+tomorrow,
+and forever.
 
 I love you ❤️
 `;
 
 function typeLetter(){
-  let i=0;
-  const target=document.getElementById("letter");
+   let j=0;
+   const speed=35;
+   const target=document.getElementById("letter");
 
-  function typing(){
-    if(i<message.length){
-      target.innerHTML+= message[i]==="\n"?"<br>":message[i];
-      i++;
-      setTimeout(typing,35);
-    }
-  }
-  typing();
+   function type(){
+      if(j<text.length){
+         target.innerHTML+= text[j]==="\n"?"<br>":text[j];
+         j++;
+         setTimeout(type,speed);
+      }
+   }
+   type();
 }
 
 </script>
